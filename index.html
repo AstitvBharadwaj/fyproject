@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Traffic Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        canvas { max-width: 600px; margin: 20px auto; }
+    </style>
+</head>
+<body> 
+    <h1>Network Traffic Analytics</h1>
+    <canvas id="trafficChart"></canvas>
+    
+    <script>
+        async function fetchAnalytics() {
+            const response = await fetch('http://localhost:5000/analytics');
+            const data = await response.json();
+            const timestamps = data.map(entry => entry[3]);
+            const counts = Array(timestamps.length).fill(1);
+            
+            new Chart(document.getElementById('trafficChart'), {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: [{
+                        label: 'User Visits',
+                        data: counts,
+                        borderColor: 'blue',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { x: { display: true }, y: { display: true } }
+                }
+            });
+        }
+        
+        fetchAnalytics();
+    </script>
+</body>
+</html>
